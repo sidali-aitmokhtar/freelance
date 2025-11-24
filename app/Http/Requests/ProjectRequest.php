@@ -4,15 +4,12 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreMilestoneRequest extends FormRequest
+class ProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
-    {
-        return false;
-    }
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -22,7 +19,8 @@ class StoreMilestoneRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title'=>$this->isMethod('POST')?['required','string']:['nullable','string'],
+            'details'=>$this->isMethod('POST')?['required','string']:['nullable','string']
         ];
     }
 }

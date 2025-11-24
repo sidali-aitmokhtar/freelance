@@ -14,4 +14,25 @@ abstract class BaseRepository
     {
         $this->model=$model;
     }
+    public function all($orderBy = 'id', $direction = 'asc'){
+        return $this->model->orderBy($orderBy, $direction)->get();
+    }
+    public function find($id){
+        return $this->model->find($id);
+    }
+    Public function create($data){
+        return $this->model->create($data);
+    }
+    public function update($data,$id){
+        $model = $this->model->find($id);
+        if (!$model) {
+            return false;
+        }
+        $model->update($data);
+        return $model->fresh();
+    }
+    public function delete($id){
+        $deleted=$this->model->destroy($id);
+        return $deleted>0;
+    }
 }

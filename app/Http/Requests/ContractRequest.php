@@ -4,15 +4,12 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreEscrowTransactionRequest extends FormRequest
+class ContractRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
-    {
-        return false;
-    }
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -22,7 +19,7 @@ class StoreEscrowTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'yes'=>$this->isMethod('POST')?['required']:['nullable']
         ];
     }
 }

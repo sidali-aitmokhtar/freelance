@@ -11,6 +11,9 @@ class Bid extends Model
     /** @use HasFactory<\Database\Factories\BidFactory> */
     use HasFactory;
 
+
+    protected $fillable=['bid','project_id','freelancer_id'];
+
     public function project() :BelongsTo
     {
         return $this->belongsTo(Project::class);

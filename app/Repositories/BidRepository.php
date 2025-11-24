@@ -2,14 +2,14 @@
 
 namespace App\Repositories;
 
-use App\Models\Contract;
+use App\Models\Bid;
 
-class ContractRepository extends BaseRepository
+class BidRepository extends BaseRepository
 {
     /**
      * Create a new class instance.
      */
-    public function __construct(Contract $model)
+    public function __construct(Bid $model)
     {
         parent::__construct($model);
     }

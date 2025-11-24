@@ -4,15 +4,12 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateMilestoneRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
-    {
-        return false;
-    }
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -22,7 +19,10 @@ class UpdateMilestoneRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
-        ];
+            'name'=>$this->isMethod('POST')?['required','string','max:255']:['nullable','string','max:255'],
+            'money'=>$this->isMethod('POST')?['required']:['nullable'],
+            'email'=>$this->isMethod('POST')?['required']:['nullable'],
+            'password'=>$this->isMethod('POST')?['required']:['nullable']
+            ];
     }
 }

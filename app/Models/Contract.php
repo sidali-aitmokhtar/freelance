@@ -12,7 +12,7 @@ class Contract extends Model
     /** @use HasFactory<\Database\Factories\ContractFactory> */
     use HasFactory;
 
-    protected $fillable=['price'];
+    protected $fillable=['price','project_id','freelancer_id'];
 
     public function freelancer(): BelongsTo
     {

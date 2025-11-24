@@ -12,7 +12,7 @@ class Project extends Model
 {
     /** @use HasFactory<\Database\Factories\ProjectFactory> */
     use HasFactory;
-    protected $fillable=['client_id'];
+    protected $fillable=['client_id','title','details'];
     public function publisher() :BelongsTo
     {
         return $this->belongsTo(User::class);

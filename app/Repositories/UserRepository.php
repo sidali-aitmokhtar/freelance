@@ -2,13 +2,15 @@
 
 namespace App\Repositories;
 
-class UserRepository
+use App\Models\User;
+
+class UserRepository extends BaseRepository
 {
     /**
      * Create a new class instance.
      */
-    public function __construct()
+    public function __construct(User $model)
     {
-        //
+        parent::__construct($model);
     }
 }

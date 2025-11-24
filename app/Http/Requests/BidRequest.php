@@ -4,15 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreDisputeRequest extends FormRequest
+class BidRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -22,7 +16,7 @@ class StoreDisputeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'bid'=>$this->isMethod('POST')?['required','numeric']:['nullable','numeric']
         ];
     }
 }
