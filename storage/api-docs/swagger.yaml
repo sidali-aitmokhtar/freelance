@@ -1,0 +1,202 @@
+openapi: 3.0.4
+
+info:
+  title: first api documentation
+  version: 1.0.0
+
+servers: 
+  - url: http://localhost:8000/api/v1
+
+paths:
+  /users:
+    get:
+      description: every one
+      tags:
+        - users
+      summary: get all users
+      responses:
+        '200':
+          $ref: "#/components/responses/getUsers"
+        '404':
+          description: not found
+    post:
+      description: only admin
+      tags:
+        - users
+      summary: create a user
+      security:
+        - BearerToken: []
+      requestBody:
+        $ref: '#/components/requestBodies/createUser'
+      responses:
+        '201':
+          description: user created successfully
+        '400':
+          description: couldn't create a user
+        '403':
+          description: unautherized
+  /users/{id}:
+    get:
+      description: admin and the owner of the id himself
+      tags:
+        - users
+      summary: get a specific user
+      security:
+        - BearerToken: []
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      responses:
+        '200':
+          $ref: '#/components/responses/getUser'
+        '404':
+          description: user not found
+        '403':
+          description: unautherized
+    put:
+      tags:
+        - users
+      description: admin and the owner of the id himself
+
+      summary: update user
+      security:
+        - BearerToken: []
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      requestBody:
+        $ref: '#/components/requestBodies/updateUser'
+      responses:
+        '200':
+          description: user updated successfully
+        '400':
+          description: couldn't update the user
+        '403':
+          description: unautherized
+    delete:
+      tags:
+        - users
+      description: admin and the owner of the id himself
+      summary: delete a user
+      security:
+        - BearerToken: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        '200':
+          description: user deleted successfully
+        '400':
+          description: couldn't delete the user
+        '403':
+          description: unauthorized
+tags:
+  - name: users
+
+  ### Authorization Rules:
+  - `GET /users` → Admin only
+  - `POST /users` → Admin only
+  - `GET /users/{id}` → Admin OR the user themself
+  - `PUT /users/{id}` → Admin OR the user themself
+  - `DELETE /users/{id}` → Admin OR the user themself
+      
+  ⚠ **All endpoints require Bearer Token authentication.**
+
+components:
+  schemas:
+    user:
+      type: object  
+      properties:
+        id:
+          type: string
+          example: "1"
+        name:
+          type: string
+          example: "sidali"
+        money:
+          type: number
+          format: float
+          example: 100
+        email: 
+          type: string
+          example: "sidali@gmail.com"
+
+    userCreate:
+      required: [name,email,password]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        money:
+          type: number
+          format: float
+        password:
+          type: string
+    userUpdate:
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        money:
+          type: number
+          format: float
+        password:
+          type: string
+          
+  requestBodies:
+    createUser:
+      content:
+        "application/json":
+          schema:
+            $ref: '#/components/schemas/userCreate'
+    updateUser:
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/userUpdate"
+  responses:
+    getUsers:
+      description: get all users
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/user'
+    getUser:
+      description: get user
+      content:
+        "application/json":
+          schema:
+            $ref: '#/components/schemas/user'
+  parameters:
+    userId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        
+  securitySchemes:
+    BearerToken:
+      type: http
+      scheme: bearer
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

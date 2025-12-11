@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('milestones', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('escrow_id');
-            $table->string('type');
+            $table->foreignId('escrow_transaction_id')->constrained('escrow_transactions')->onDelete('cascade');
+            $table->integer('step');
+            $table->string('description');
+            $table->float('price');
+            $table->enum('type',['pending','done'])->default('pending');
             $table->timestamps();
         });
     }

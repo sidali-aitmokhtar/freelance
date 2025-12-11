@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest
@@ -20,9 +21,10 @@ class UserRequest extends FormRequest
     {
         return [
             'name'=>$this->isMethod('POST')?['required','string','max:255']:['nullable','string','max:255'],
-            'money'=>$this->isMethod('POST')?['required']:['nullable'],
+            'money'=>$this->isMethod('POST')?['required','numeric']:['nullable','numeric'],
             'email'=>$this->isMethod('POST')?['required']:['nullable'],
-            'password'=>$this->isMethod('POST')?['required']:['nullable']
+            'password'=>$this->isMethod('POST')?['required']:['nullable'],
+            'role'=>$this->isMethod('POST')?['required',Rule::in(['admin','freelancer','client'])]:['nullable',Rule::in(['admin','freelancer','client'])]
             ];
     }
 }

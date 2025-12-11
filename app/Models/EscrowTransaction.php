@@ -17,6 +17,8 @@ class EscrowTransaction extends Model
         return $this->belongsTo(Contract::class);
     }
 
+    protected $fillable =['money','contract_id'];
+
     public function milestone(): HasOne
     {
         return $this->hasOne(Milestone::class);

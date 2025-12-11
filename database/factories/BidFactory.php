@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
+use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,11 @@ class BidFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'project_id'=>Project::inRandomOrder()->first()->id,
+            'freelancer_id'=>User::role('freelancer')->inRandomOrder()->first()->id,
+            'bid'=>fake()->randomFloat(2,0,1000),
+            'months'=>fake()->numberBetween(0,11),
+            'days'=>fake()->numberBetween(1,30)
         ];
     }
 }

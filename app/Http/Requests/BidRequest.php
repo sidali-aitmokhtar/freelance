@@ -16,7 +16,10 @@ class BidRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bid'=>$this->isMethod('POST')?['required','numeric']:['nullable','numeric']
+            'bid'=>$this->isMethod('POST')?['required','numeric']:['nullable','numeric'],
+            'months'=>$this->isMethod('POST')?['required']:['nullable'],
+            'days'=>$this->isMethod('POST')?['required']:['nullable'],
+            'milestone_json'=>$this->isMethod('POST')?['required']:['nullable']
         ];
     }
 }

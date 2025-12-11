@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('bids', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id');
-            $table->foreignId('freelancer_id');
-            $table->integer('bid');
+            $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
+            $table->foreignId('freelancer_id')->constrained('users')->onDelete('cascade');
+            $table->float('bid');
+            $table->enum('status',['accepted','denied','pending'])->default('pending');
+            $table->json('milestone_json');
+            $table->integer('months')->nullable();
+            $table->integer('days')->nullable();
             $table->timestamps();
         });
     }

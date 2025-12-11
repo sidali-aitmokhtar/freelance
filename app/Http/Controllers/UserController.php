@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
+use App\Filters\UserFilter;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Http\Requests\UserRequest;
 use Spatie\Permission\Models\Role;
-use Exception;
 
 class UserController extends Controller
 {
@@ -15,9 +16,9 @@ class UserController extends Controller
         private readonly UserService $userService
     ){}
 
-    public function index(Request $request){
+    public function index(Request $request,UserFilter $fuser){
         try {
-            $users = $this->userService->getUsers($request);
+            $users = $this->userService->getUsers($request,$fuser);
             return response()->json([
                 'success' => true,
                 'message' => 'Users retrieved successfully',
@@ -59,7 +60,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
-            ], $e->getCode() ?: 500);
+            ],  500);
         }
     }
 
@@ -106,7 +107,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
-            ], 500);
+            ],$e->getCode()?: 500);
         }
     }
 }

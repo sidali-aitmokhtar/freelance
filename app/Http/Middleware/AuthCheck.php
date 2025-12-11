@@ -14,7 +14,7 @@ class AuthCheck
     {
         // Dev token bypass
         if ($request->bearerToken() === env('TESTING_API_TOKEN')) {
-            Auth::login(User::find(2));
+            Auth::login(User::find(5));
             return $next($request);
         }
 

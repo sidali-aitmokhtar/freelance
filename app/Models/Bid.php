@@ -12,14 +12,19 @@ class Bid extends Model
     use HasFactory;
 
 
-    protected $fillable=['bid','project_id','freelancer_id'];
+    protected $fillable=['bid','project_id','freelancer_id','months','days','status','milestone_json'];
+
+
+    protected $casts = [
+        'milestone_json' => 'json',
+    ];
 
     public function project() :BelongsTo
     {
         return $this->belongsTo(Project::class);
     }
-    public function client() :BelongsTo
+    public function freelancer() :BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'freelancer_id');
     }
 }

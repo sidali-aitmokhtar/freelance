@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Bid;
 use Illuminate\Database\Seeder;
 
 class BidSeeder extends Seeder
@@ -12,6 +12,6 @@ class BidSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Bid::factory(10)->create();
     }
 }

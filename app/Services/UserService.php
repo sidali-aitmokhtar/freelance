@@ -2,10 +2,14 @@
 
 namespace App\Services;
 
+use Exception;
+use App\Models\User;
+use App\Filters\UserFilter;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Repositories\UserRepository;
-use Exception;
+use App\Http\Requests\UserFilterRequest;
+use App\Http\Resources\UserResource;
 
 class UserService extends BaseService
 {
@@ -17,16 +21,20 @@ class UserService extends BaseService
     ){}
 
     //index
-    public function getUsers(Request $request){
+    public function getUsers(Request $request,UserFilter $fuser){
         $this->logwithcontext('Starting to fetch all users', [
             'operation' => 'getUsers',
             'requested_by' => $request->user()?->id
         ]);
         
-        $users = $this->userRepository->all();
+        
+        $users=$fuser->apply(User::query())->get();
+        
+
+        // $users = $this->userRepository->all();
         
         $this->loginfo('Successfully retrieved users', ['count' => $users->count()]);
-        return $users;
+        return UserResource::collection($users);
     }
 
     //show
@@ -51,8 +59,14 @@ class UserService extends BaseService
             'email' => $data['email'] ?? null
         ]);
         
+        // Extract role from data before creating user
+        $role = $data['role'] ?? null;
+        unset($data['role']); // Remove role from user data
+
+
         $user = $this->userRepository->create($data);
-        
+        $user->assignRole($role);
+
         $this->loginfo('User created successfully', [
             'user_id' => $user->id,
             'email' => $user->email
@@ -76,7 +90,7 @@ class UserService extends BaseService
         
         if(!$updated){
             $this->logerror('Failed to update user', ['user_id' => $id]);
-            throw new Exception('Failed to update user');
+            throw new Exception('Failed to update user', 500); // 500 signals an unexpected server failure during persistence
         }
         
         $user = $this->userRepository->find($id);
@@ -92,7 +106,7 @@ class UserService extends BaseService
             'user_id' => $id,
             'deleted_by' => $request->user()?->id
         ]);
-        
+
         $user = $this->findUser($id);
         $this->validateAccess($request, $id);
         
@@ -100,7 +114,7 @@ class UserService extends BaseService
         
         if(!$deleted){
             $this->logerror('Failed to delete user', ['user_id' => $id]);
-            throw new Exception('Failed to delete user');
+            throw new Exception('Failed to delete user', 500); // 500 clarifies that deletion failed because of a server-side issue
         }
         
         $this->loginfo('User deleted successfully', ['user_id' => $id]);

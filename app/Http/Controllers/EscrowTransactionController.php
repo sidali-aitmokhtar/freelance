@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEscrowTransactionRequest;
-use App\Http\Requests\UpdateEscrowTransactionRequest;
+use App\Services\BaseService;
 use App\Models\EscrowTransaction;
+use App\Services\EscrowTransactionService;
+use App\Http\Requests\EscrowTransactionRequest;
 
 class EscrowTransactionController extends Controller
 {
+    public function __construct(
+        private readonly EscrowTransactionService $escrowtransactionService
+    ){}
     /**
      * Display a listing of the resource.
      */
@@ -27,7 +31,7 @@ class EscrowTransactionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreEscrowTransactionRequest $request)
+    public function store(EscrowTransactionRequest $request)
     {
         //
     }
@@ -51,7 +55,7 @@ class EscrowTransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateEscrowTransactionRequest $request, EscrowTransaction $escrowTransaction)
+    public function update(EscrowTransactionRequest $request, EscrowTransaction $escrowTransaction)
     {
         //
     }

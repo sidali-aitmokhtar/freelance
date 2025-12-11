@@ -14,14 +14,17 @@ abstract class BaseRepository
     {
         $this->model=$model;
     }
-    public function all($orderBy = 'id', $direction = 'asc'){
-        return $this->model->orderBy($orderBy, $direction)->get();
+    public function all(){
+        return $this->model->all();
     }
     public function find($id){
         return $this->model->find($id);
     }
     Public function create($data){
         return $this->model->create($data);
+    }
+    public function query(){
+        return $this->model->newQuery();
     }
     public function update($data,$id){
         $model = $this->model->find($id);

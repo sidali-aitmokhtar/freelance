@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id');
-            $table->foreignId('freelancer_id');
+            $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
+            $table->foreignId('freelancer_id')->constrained('users')->onDelete('cascade');
             $table->decimal('price');
+            $table->date('dead_line')->nullable();
             $table->timestamps();
         });
     }

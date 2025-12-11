@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\ProjectFilter;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProjectRequest;
@@ -18,10 +19,10 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request,ProjectFilter $filter)
     {
         try{
-            $projects=$this->projectService->getProjects();
+            $projects=$this->projectService->getProjects($filter);
             return response()->json([
                 'success' => true,
                 'message' => 'Projects retrieved successfully',
@@ -31,7 +32,7 @@ class ProjectController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
-            ], $this->getStatusCode($e));
+            ],$e->getCode()?:500);
         }
     }
 
@@ -56,7 +57,7 @@ class ProjectController extends Controller
             return response()->json([
                 'success'=>false,
                 'message'=>$e->getMessage()
-            ],$this->getStatusCode($e));
+            ],$e->getCode()?:500);
         }
     }
 
@@ -92,7 +93,7 @@ class ProjectController extends Controller
             return response()->json([
                 'success'=>false,
                 'message'=>$e->getMessage()
-            ],$this->getStatusCode($e));
+            ],$e->getCode()?:500);
         }
     }
 
@@ -111,20 +112,8 @@ class ProjectController extends Controller
             return response()->json([
                 'success'=>false,
                 'message'=>$e->getMessage()
-            ],$this->getStatusCode($e));
+            ],$e->getCode()?:500);
         }
     }
 
-    /**
-     * Get valid HTTP status code from exception
-     */
-    private function getStatusCode(\Exception $e): int
-    {
-        $code = $e->getCode();
-        // HTTP status codes must be between 100-599
-        if ($code >= 100 && $code < 600) {
-            return (int) $code;
-        }
-        return 500;
-    }
 }

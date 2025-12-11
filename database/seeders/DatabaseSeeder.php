@@ -71,7 +71,7 @@ class DatabaseSeeder extends Seeder
 
 
         User::factory()->create([
-            'money'=>200,
+            'money'=>2000,
             'password'=>'npc'
         ])->assignRole($client);
 
@@ -97,6 +97,8 @@ class DatabaseSeeder extends Seeder
             'password' =>'sid'
         ])->assignRole($freelancer);
 
+        $this->call(ProjectSeeder::class);
+        //$this->call(BidSeeder::class);
         
     }
 }

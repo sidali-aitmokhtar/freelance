@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bid;
 use App\Models\Project;
+use App\Filters\BidFilter;
 use App\Services\BidService;
 use Illuminate\Http\Request;
 use App\Http\Requests\BidRequest;
@@ -17,30 +18,42 @@ class BidController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Project $project,BidFilter $filter)
     {
-        //
+        try{
+            $bids=$this->bidService->getBids($project,$filter);
+            return response()->json([
+                'success'=>true,
+                'message'=>'bid retrieved successfully',
+                'data'=>$bids
+            ],200);
+        }catch(\Exception $e){
+            return response()->json([
+                'success'=>true,
+                'message'=>$e->getMessage()
+            ],$e->getCode()?:500);
+        }
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create($id,Request $request)
-    {
-        //
-        $val=$request->validate([
-            'bid'=>'required'
-        ]);
-        Bid::factory()->create([
-            'freelancer_id'=>$request->user()->id,
-            'project_id'=>$id,
-            'bid'=>$request->bid]
-        );
+    // public function create($id,Request $request)
+    // {
+    //     //
+    //     $val=$request->validate([
+    //         'bid'=>'required'
+    //     ]);
+    //     Bid::factory()->create([
+    //         'freelancer_id'=>$request->user()->id,
+    //         'project_id'=>$id,
+    //         'bid'=>$request->bid]
+    //     );
         
         
-        return response()->json('your bid is saved',201);
+    //     return response()->json('your bid is saved',201);
 
-    }
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -58,7 +71,7 @@ class BidController extends Controller
             return response()->json([
                 'success'=>false,
                 'message'=>$e->getMessage()
-            ],500);
+            ],$e->getCode()?:500);
         }
     }
 
@@ -93,7 +106,7 @@ class BidController extends Controller
             return response()->json([
                 'success'=>false,
                 'message'=>$e->getMessage()
-            ],500);
+            ],$e->getCode()?:500);
         }
     }
 
@@ -112,7 +125,7 @@ class BidController extends Controller
             return response()->json([
                 'success'=>false,
                 'message'=>$e->getMessage()
-            ],500);
+            ],$e->getCode()?:500);
         }
     }
 }

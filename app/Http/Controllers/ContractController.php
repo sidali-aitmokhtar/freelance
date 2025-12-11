@@ -28,9 +28,21 @@ class ContractController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try{
+            $contracts=$this->contractService->getContracts($request);
+            return response()->json([
+                'success'=>true,
+                'message'=>'contracts fetched successfully',
+                'data'=>$contracts
+            ],200);
+        }catch(\Exception $e){
+            return response()->json([
+                'success'=>false,
+                'message'=>$e->getMessage()
+            ],$e->getCode()?:500);
+        }
     }
 
     /**
@@ -120,8 +132,19 @@ class ContractController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request,Contract $contract)
+    public function destroy(Request $request,Project $project,Bid $bid,Contract $contract)
     {
-        //
+        try{
+            $this->contractService->deleteContract($request,$contract);
+            return response()->json([
+                'success'=>true,
+                'message'=>'contract deleted successfully'
+            ],200);
+        }catch(\Exception $e){
+            return response()->json([
+                'success'=>false,
+                'message'=>$e->getMessage()
+            ],$e->getCode()?:500);
+        }
     }
 }

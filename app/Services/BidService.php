@@ -4,7 +4,10 @@ namespace App\Services;
 
 use App\Models\Bid;
 use App\Models\Project;
+use App\Filters\BidFilter;
+use Illuminate\Http\Request;
 use App\Http\Requests\BidRequest;
+use App\Http\Resources\BidResource;
 use App\Repositories\BidRepository;
 
 class BidService extends BaseService
@@ -17,12 +20,25 @@ class BidService extends BaseService
     ){}
 
 
+    public function getBids(Project $project,BidFilter $filter){
+        // $query=$this->bidRepository->query();
+
+        $bid=$filter->apply(Bid::query())->where('project_id',$project->id)->get();
+
+        // $bid->where('project_id',$project->id);
+
+        return BidResource::collection($bid);
+    }
+
+
+
     public function createBid(BidRequest $request,Project $project){
         $this->logwithcontext('creating a bid',[
             'operation'=>'creation',
             'by'=>$request->user()->id
         ]);
-
+        $milestone=$request->milestone_json;
+        $this->price($request,$milestone);
         $this->already($request,$project);
 
         $data=$request->validated();
@@ -37,6 +53,9 @@ class BidService extends BaseService
             'operation'=>'updating',
             'by'=>$request->user()->id
         ]);
+
+        $milestone=$request->milestone_json;
+        $this->price($request,$milestone);
 
         $this->same($bid,$project);
         $this->access($request,$bid);
@@ -82,8 +101,7 @@ class BidService extends BaseService
             }
             if($exist){
                 $this->logerror('you already have bid try updating your bid instead');
-                throw new \Exception('you already have bid try updating your bid instead');
-                
+                throw new \Exception('you already have bid try updating your bid instead',409); // 409 reflects a conflict because the freelancer already created a bid for this project
             }
             $this->loginfo('everything id good');
             return ;
@@ -94,10 +112,10 @@ class BidService extends BaseService
         if($bid->project_id===$project->id){
             return ;
         }
-        throw new \Exception('this bid is not for this project');
+        throw new \Exception('this bid is not for this project',400);
     }
 
-    
+
 
     private function access(BidRequest $request,Bid $bid){
         $user=$request->user();
@@ -107,7 +125,22 @@ class BidService extends BaseService
             return ;
         }
         $this->logerror('rak ta3rf rani bdit nkrah');
-        throw new \Exception('rak ta3rf rani bdit nkrah');
+        throw new \Exception('rak ta3rf rani bdit nkrah',403);
     }
+
+    private function price(Request $request,$milestone=[]){
+        $price=0;
+        foreach($milestone as $value){
+            $price+=$value['price'];
+        }
+        if($price!=$request->bid){
+            $this->logerror('the prices do not match');
+            throw new \Exception('the prices do not match');
+        }
+        $this->loginfo('the prices match');
+        return ;
+    }
+
+
 
 }

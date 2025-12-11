@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('escrow_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('contract_id');
+            $table->foreignId('contract_id')->constrained('contracts')->onDelete('cascade');
             $table->decimal('money');
             $table->timestamps();
         });
